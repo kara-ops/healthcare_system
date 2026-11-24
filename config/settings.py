@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': env('DB_ENGINE', default='django.db.backends.postgresql'),
         'NAME': env('DB_NAME', default='healthcare_db'),
         'USER': env('DB_USER', default='postgres'),
         'PASSWORD': env('DB_PASSWORD', default='postgres'),

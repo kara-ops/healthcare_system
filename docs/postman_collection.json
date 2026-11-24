@@ -1,0 +1,612 @@
+{
+  "info": {
+    "_postman_id": "f34d47ac-fee4-40e0-be8e-48b66a635c08",
+    "name": "Healthcare Backend API",
+    "description": "Comprehensive Postman v2.1.0 collection for Healthcare Backend API (Django 5.1 + DRF 3.15 + SimpleJWT).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Dr. Gregory House\",\n  \"email\": \"house@princetonplainsboro.com\",\n  \"password\": \"DiagnosticSupervision2026!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/register/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register",
+            ""
+          ]
+        },
+        "description": "Register a new user account with name, email, and password."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Login User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.access) {",
+              "    pm.environment.set(\"token\", jsonData.access);",
+              "    pm.collectionVariables.set(\"token\", jsonData.access);",
+              "}",
+              "if (jsonData.refresh) {",
+              "    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+              "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"house@princetonplainsboro.com\",\n  \"password\": \"DiagnosticSupervision2026!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/login/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login",
+            ""
+          ]
+        },
+        "description": "Authenticate user credentials. Automatically saves JWT access token to {{token}} variable."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Refresh Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.access) {",
+              "    pm.environment.set(\"token\", jsonData.access);",
+              "    pm.collectionVariables.set(\"token\", jsonData.access);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/token/refresh/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "token",
+            "refresh",
+            ""
+          ]
+        },
+        "description": "Submit refresh token to receive a new access token."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Create Patient",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Smith\",\n  \"age\": 45,\n  \"gender\": \"Female\",\n  \"phone\": \"+1234567890\",\n  \"address\": \"123 Main St, Springfield\",\n  \"medical_history\": \"Diabetes Type 2\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/patients/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "patients",
+            ""
+          ]
+        },
+        "description": "Create a new patient record (scoped to authenticated user)."
+      },
+      "response": []
+    },
+    {
+      "name": "5. List Patients",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/patients/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "patients",
+            ""
+          ]
+        },
+        "description": "List all patients created by the authenticated user."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Get Patient by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/patients/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "patients",
+            "1",
+            ""
+          ]
+        },
+        "description": "Retrieve details of a single patient (owner-only, returns 404 for other users)."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Update Patient (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Smith\",\n  \"age\": 46,\n  \"gender\": \"Female\",\n  \"phone\": \"+1234567890\",\n  \"address\": \"123 Main St, Springfield\",\n  \"medical_history\": \"Diabetes Type 2, resolved hypertension\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/patients/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "patients",
+            "1",
+            ""
+          ]
+        },
+        "description": "Perform full update on a patient record (owner-only)."
+      },
+      "response": []
+    },
+    {
+      "name": "8. Create Doctor",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Dr. Allison Cameron\",\n  \"specialization\": \"Immunology\",\n  \"email\": \"cameron@princetonplainsboro.com\",\n  \"phone\": \"+1-555-0144\",\n  \"years_of_experience\": 8\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/doctors/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            ""
+          ]
+        },
+        "description": "Add a new doctor to the shared directory."
+      },
+      "response": []
+    },
+    {
+      "name": "9. List Doctors",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/doctors/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            ""
+          ]
+        },
+        "description": "List all doctors in the shared directory."
+      },
+      "response": []
+    },
+    {
+      "name": "10. Get Doctor by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/doctors/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            "1",
+            ""
+          ]
+        },
+        "description": "Retrieve details of a single doctor in the directory."
+      },
+      "response": []
+    },
+    {
+      "name": "11. Update Doctor (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Dr. Allison Cameron\",\n  \"specialization\": \"Diagnostic Immunology\",\n  \"email\": \"cameron@princetonplainsboro.com\",\n  \"phone\": \"+1-555-0144\",\n  \"years_of_experience\": 9\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/doctors/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            "1",
+            ""
+          ]
+        },
+        "description": "Update doctor details (creator-only, returns 403 for other users)."
+      },
+      "response": []
+    },
+    {
+      "name": "12. Assign Doctor to Patient (Create Mapping)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"patient_id\": 1,\n  \"doctor_id\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/mappings/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "mappings",
+            ""
+          ]
+        },
+        "description": "Assign doctor to patient (patient must be owned by authenticated user)."
+      },
+      "response": []
+    },
+    {
+      "name": "13. List Mappings",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/mappings/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "mappings",
+            ""
+          ]
+        },
+        "description": "List all mappings whose patient is owned by the authenticated user."
+      },
+      "response": []
+    },
+    {
+      "name": "14. Get Doctors for Patient",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/mappings/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "mappings",
+            "1",
+            ""
+          ]
+        },
+        "description": "List all doctors assigned to patient with ID 1 (owner-only, returns 404 for unowned patients)."
+      },
+      "response": []
+    },
+    {
+      "name": "15. Delete Mapping",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/mappings/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "mappings",
+            "1",
+            ""
+          ]
+        },
+        "description": "Remove mapping with ID 1 (owner-only)."
+      },
+      "response": []
+    },
+    {
+      "name": "16. Delete Patient",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/patients/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "patients",
+            "1",
+            ""
+          ]
+        },
+        "description": "Delete patient with ID 1 (owner-only; cascades to delete associated mappings)."
+      },
+      "response": []
+    },
+    {
+      "name": "17. Delete Doctor",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/doctors/1/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            "1",
+            ""
+          ]
+        },
+        "description": "Delete doctor with ID 1 (creator-only; cascades to delete associated mappings)."
+      },
+      "response": []
+    }
+  ]
+}

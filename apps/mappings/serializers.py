@@ -39,8 +39,8 @@ class MappingCreateSerializer(serializers.Serializer):
 
 
 class MappingReadSerializer(serializers.ModelSerializer):
-    patient_id = serializers.IntegerField(source='patient_id', read_only=True)
-    doctor_id = serializers.IntegerField(source='doctor_id', read_only=True)
+    patient_id = serializers.IntegerField(read_only=True)
+    doctor_id = serializers.IntegerField(read_only=True)
     patient_name = serializers.CharField(source='patient.name', read_only=True)
     doctor_name = serializers.CharField(source='doctor.name', read_only=True)
 

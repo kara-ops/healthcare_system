@@ -1,6 +1,6 @@
 # Healthcare Backend API
 
-A production-grade, secure, multi-tenant healthcare backend built with **Django 5.1**, **Django REST Framework (DRF) 3.15**, **PostgreSQL 16**, and **JWT authentication (SimpleJWT)**. 
+A production-grade, secure, multi-tenant healthcare backend built with **Django 5.1**, **Django REST Framework (DRF) 3.15**, **PostgreSQL 15**, and **JWT authentication (SimpleJWT)**. 
 
 The system enables healthcare providers to securely register, authenticate, manage private patient records, maintain a shared directory of qualified doctors, and assign doctors to patients.
 
@@ -73,7 +73,7 @@ drf_healthcare_p/
 ## Prerequisites
 
 - **Python**: Version `3.11` or newer
-- **Database**: **PostgreSQL 16+** (native service or running via **Docker & Docker Compose**)
+- **Database**: **PostgreSQL 15+** (native service or running via **Docker & Docker Compose**)
 - **Git**
 
 ---
@@ -113,15 +113,15 @@ pip install -r requirements.txt
 
 **Option A: Using Docker Compose (Recommended)**
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
-*This starts a PostgreSQL 16 container named `drf_healthcare_p-db-1` on port `5432` with a persistent volume `postgres_data`.*
+*This starts a PostgreSQL 15 container named `healthcare-db` on port `5434` with a persistent volume `postgres_data`.*
 
 **Option B: Using Local PostgreSQL**
 Ensure PostgreSQL is running locally and create the database:
 ```sql
 CREATE DATABASE healthcare_db;
-CREATE USER postgres WITH PASSWORD 'postgres';
+CREATE USER postgres WITH PASSWORD 'password';
 GRANT ALL PRIVILEGES ON DATABASE healthcare_db TO postgres;
 ```
 
@@ -141,9 +141,9 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 DB_NAME=healthcare_db
 DB_USER=postgres
-DB_PASSWORD=postgres
+DB_PASSWORD=password
 DB_HOST=localhost
-DB_PORT=5432
+DB_PORT=5434
 JWT_ACCESS_LIFETIME_MINUTES=60
 JWT_REFRESH_LIFETIME_DAYS=7
 ```
@@ -374,9 +374,9 @@ curl -s -X DELETE http://127.0.0.1:8000/api/doctors/1/ \
 | `DB_ENGINE` | `django.db.backends.postgresql` | No | Database engine. Override with `django.db.backends.sqlite3` for in-memory testing. |
 | `DB_NAME` | `healthcare_db` | No | PostgreSQL database name. |
 | `DB_USER` | `postgres` | No | PostgreSQL user role. |
-| `DB_PASSWORD` | `postgres` | No | PostgreSQL user password. |
+| `DB_PASSWORD` | `password` | No | PostgreSQL user password. |
 | `DB_HOST` | `localhost` | No | PostgreSQL host address (e.g. `localhost` or docker host). |
-| `DB_PORT` | `5432` | No | PostgreSQL connection port. |
+| `DB_PORT` | `5434` | No | PostgreSQL connection port. |
 | `JWT_ACCESS_LIFETIME_MINUTES` | `60` | No | Access token validity duration in minutes. |
 | `JWT_REFRESH_LIFETIME_DAYS` | `7` | No | Refresh token validity duration in days. |
 
